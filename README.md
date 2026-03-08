@@ -38,6 +38,32 @@ Nach jedem Dispatch. Schema-konform. Undeclared fields? Weg. Lautlos. Dokumentie
 
 ---
 
+## Security Hardening
+
+Dieses Framework durchlief vor Release einen unabhängigen Security-Review durch drei verschiedene LLM-Modelle.
+
+**Addressierte Attack-Vektoren:**
+
+1. **Prototype Pollution** – `__proto__`-Injection wird durch Schema-Whitelisting blockiert. Nur deklarierte Felder überleben den Sanitizer.
+
+2. **Getter Injection** – Manipulierte Getter werden beim ersten Zugriff neutralisiert. Der Sanitizer extrahiert den Wert und speichert ihn als Primitiv.
+
+3. **Mutation Matrix Bypass** – Jeder Patch wird gegen die `mutationMatrix` validiert. Schreibzugriffe außerhalb der Whitelist führen zum sofortigen Error.
+
+4. **TypedArray Hidden Properties** – TypedArrays werden durch Neu-Allokation (`new v.constructor(v)`) von versteckten Properties bereinigt.
+
+5. **Deterministischer Drift** – `Math.random()` und `Date.now()` sind verboten. Nur seed-basierte `rngStreams` erlaubt.
+
+6. **Strukturelle Härtung** – `.LLM_ENTRY.md` versteckt, Test-Infrastruktur in `test-audits/` isoliert.
+
+**Review-Prozess:**
+- 3 unabhängige LLM-Auditoren (ChatGPT, Claude, Gemini)
+- Jeder generierte Security-Tests
+- Deployment-Kriterium: Einstimmiges "production-ready"
+- **Ergebnis: Von allen drei APPROVED**
+
+---
+
 ## Schnellstart
 
 ```js
