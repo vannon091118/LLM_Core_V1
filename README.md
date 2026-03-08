@@ -1,24 +1,129 @@
-# LLM_Core_V1 (Kernel Core)
+# LLM_Core_V1
 
-Ein deterministisches, contract-basiertes Kernel-Framework zur Erzwingung von Datenintegrität und Sicherheits-Invarianten in LLM-gesteuerten Applikationen.
-
-## 🛡️ Kern-Philosophie
-Dieser Kernel wurde entwickelt, um die Ausführung von Code (insbesondere durch LLMs generiert) in einer kontrollierten Umgebung zu sichern. Er basiert auf einem **"Strict Contract Enforcement"** Modell:
-- **Keine direkten Mutationen:** Zustandsänderungen sind nur über deterministische Patches möglich.
-- **Write-Gate Validation:** Die `mutationMatrix` definiert explizit, welche Action welche Pfade im State beschreiben darf.
-- **Recursive Sanitizing:** Jede Änderung wird gegen ein striktes `stateSchema` validiert, um Prototype-Pollution und Daten-Drift zu verhindern.
-
-## 🚀 Features
-- **Centralized Store:** Einziger Einstiegspunkt für alle Zustandsänderungen.
-- **Path-Level Security:** Validierung von Patch-Operationen auf Pfad-Ebene.
-- **Deterministischer RNG:** Seed-basierte Zufallsströme für reproduzierbare Simulationen.
-- **JSON-Serialisierbarkeit:** Erzwingt einen flachen, serialisierbaren State ohne versteckte Logik (keine Klassen/Instanzen im State).
-
-## 🏗️ Implementierungen
-- [LLM_Safe_BioLab_Sim](https://github.com/vannon091118/LLM_Safe_BioLab_Sim) - Die Referenz-Simulation und Beispiel-Implementierung.
-
-## 📄 Lizenz
-Dieses Projekt ist unter der **GNU Affero General Public License v3 (AGPL-3.0)** lizenziert. Dies bedeutet, dass jede Software, die diesen Kernel nutzt und über ein Netzwerk interagiert, ebenfalls unter der AGPL lizenziert werden muss. Siehe [LICENSE](./LICENSE) für den vollständigen Text.
+> Self-enforcing contracts for LLM-assisted development.  
+> Built in 6 days. On a Samsung S10. By someone who plays too much WoW.
 
 ---
-*Hinweis: Dieser Kernel enthält eine versteckte `.LLM_ENTRY.md` Steuerungsdatei für LLM-Agenten.*
+
+## Was ist das?
+
+Ein Kernel der LLMs zwingt, deinen Code zu lesen bevor sie ihn anfassen.
+
+Kein Framework das du 3 Monate studieren musst. Kein Vertrauen in "die KI macht's schon." Stattdessen: mechanische Enforcement. Wer nicht spurt, kriegt einen Error. Jedes Mal. Ohne Ausnahme.
+
+---
+
+## Das Problem
+
+LLMs verlieren nach wenigen Sessions den Kontext. Normal. Bekannt. Unbefriedigend.
+
+**Lösung (alle anderen):** Mehr Kontext kaufen. Bessere Prompts schreiben. Hoffen.  
+**Lösung (dieser Kernel):** Der Code schmiert sich selbst ab. Lautlos. Mechanisch.
+
+---
+
+## Wie es funktioniert
+
+Drei Gates. Keine Umgehung.
+
+**1. Write-Gate**  
+Kein direkter State-Write möglich. Nur über `store.dispatch()`. Punkt.
+
+**2. Mutation Matrix**  
+Jede Action hat eine Whitelist erlaubter Schreibpfade. Wer außerhalb schreibt, kriegt:  
+`Error: Patch path not allowed: /dein/pfad`
+
+**3. Sanitizer**  
+Nach jedem Dispatch. Schema-konform. Undeclared fields? Weg. Lautlos. Dokumentiert.
+
+---
+
+## Schnellstart
+
+```js
+import { createStore } from './kernel/store.js';
+
+const manifest = {
+  SCHEMA_VERSION: 1,
+  stateSchema: {
+    type: "object",
+    shape: {
+      meta: { type: "object", shape: { seed: { type: "string", default: "my-seed" } } },
+      counter: { type: "number", default: 0 }
+    }
+  },
+  actionSchema: {
+    INCREMENT: { type: "object", shape: {} }
+  },
+  mutationMatrix: {
+    INCREMENT: ["/counter"]
+  }
+};
+
+const project = {
+  reducer: (state, action) => {
+    if (action.type === "INCREMENT") {
+      return [{ op: "set", path: "/counter", value: state.counter + 1 }];
+    }
+    return [];
+  }
+};
+
+const store = createStore(manifest, project);
+store.dispatch({ type: "INCREMENT" });
+console.log(store.getState().counter); // 1
+```
+
+---
+
+## Kernel Files
+
+| File | Funktion |
+|------|----------|
+| `store.js` | Einziger Write-Entry. Drei Gates. Kein Bypass. |
+| `patches.js` | Patch-Engine + Mutation Matrix Enforcement |
+| `schema.js` | Auto-Sanitizer. Löscht was nicht drin sein sollte. |
+| `rng.js` | Deterministischer RNG. Kein `Math.random()`. Nie. |
+| `hash32.js` | FNV-1a Hashing für State-Signaturen |
+| `stableStringify.js` | Deterministisches JSON für Reproduzierbarkeit |
+| `persistence.js` | Platform-agnostischer Storage-Driver |
+| `LLM_ENTRY.md` | Der Vertrag. LLMs lesen das zuerst. |
+
+---
+
+## Verifiziert gegen
+
+- Prototype Pollution (`/__proto__/polluted`) → **BLOCKIERT**
+- Path Traversal (`/data/../meta/seed`) → **BLOCKIERT**
+- Logic Injection (Getter als Value) → **NEUTRALISIERT**
+- Fuzzing (NaN, Infinity, null, {}) → **6/6 ÜBERLEBT**
+- 8 parallele Worker-Threads → **KEIN GLOBAL LEAK**
+- Cross-LLM: ChatGPT, Claude, Gemini → **REPRODUZIERBAR**
+
+---
+
+## Warum AGPL-3.0?
+
+Weil MIT bedeutet: Amazon baut drauf. Du siehst nix. Legal. Danke, tschüss.
+
+AGPL bedeutet: Wer's kommerziell nutzen will, muss zu mir. Nicht umgekehrt.
+
+---
+
+## Demo / Stress-Test
+
+→ [LLM_Safe_BioLab_Sim](https://github.com/vannon091118/LLM_Safe_BioLab_Sim)
+
+Eine vollständige Biosphären-Simulation (GoL × Darwin × Licht) auf diesem Kernel.  
+1472 Zeilen. 34 Versionen. 6 Tage. Gleicher Kern. Kein Zusammenbruch.
+
+---
+
+## License
+
+**AGPL-3.0** — Open source für alle. Kommerziell nur mit Absprache.
+
+---
+
+*Gebaut von einem WoW-Spieler der keine 20€ für ChatGPT Pro zahlen wollte.*  
+*Hat trotzdem funktioniert.*
