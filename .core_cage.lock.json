@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "generatedAt": "2026-03-12T01:36:46.948Z",
+  "files": [
+    "kernel/hash32.js",
+    "kernel/index.js",
+    "kernel/patches.js",
+    "kernel/persistence.js",
+    "kernel/physics.js",
+    "kernel/rng.js",
+    "kernel/schema.js",
+    "kernel/stableStringify.js",
+    "kernel/store.js"
+  ],
+  "hashes": {
+    "kernel/hash32.js": "0ffa45927fd7b69f789ff5154c6a3f6da596f9c1adf10fc99a839330a7892589",
+    "kernel/index.js": "96b0197800c10d5d8fb4e725d27f84fff0e3cf82fac60e179a80c07d39a6a890",
+    "kernel/patches.js": "1dcf91529060db7ecf257b743f43fd8809ee8d813f8e5deab0339486dbd2ece0",
+    "kernel/persistence.js": "73cc785d873d88a47029618833d64338aae747f1e7bc929f02c1590147496bfa",
+    "kernel/physics.js": "4b10caf9c2f053d466ee1bfdbcce23117ff4dd6e0456f9fcd207ec33f317a248",
+    "kernel/rng.js": "f053970e1ef6d5e182743dfb4b1a4a443eb9788b3b4da16bff8cd65eaa48dd8c",
+    "kernel/schema.js": "b62120409c1f59709ab2db8d3d29ed26891897dc50b35bac25e54602e2290365",
+    "kernel/stableStringify.js": "2ab370c3ce46f736b753682a253a45ce2e6301a67a8bcd3fa2591250f2b6fd33",
+    "kernel/store.js": "8a0e8b6ff0cba1b0e875a16ff965a7abdf4bcb5074ff0cd8e48c2d84eceb4b22"
+  }
+}

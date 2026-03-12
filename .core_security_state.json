@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "locked": true,
+  "lockedAt": "2026-03-12T01:36:47.474Z",
+  "criticalFiles": [
+    ".githooks/post-checkout",
+    ".githooks/post-merge",
+    "LLM_ENTRY.md",
+    "CHANGELOG.md",
+    "CHANGE_MATRIX.jsonl",
+    "package.json",
+    "kernel/hash32.js",
+    "kernel/index.js",
+    "kernel/patches.js",
+    "kernel/persistence.js",
+    "kernel/physics.js",
+    "kernel/rng.js",
+    "kernel/schema.js",
+    "kernel/stableStringify.js",
+    "kernel/store.js",
+    "scripts/ack-llm-entry.mjs",
+    "scripts/check-llm-entry.mjs",
+    "scripts/changelog-append-guard.mjs",
+    "scripts/change-matrix.mjs",
+    "scripts/core-integrity-cage.mjs",
+    "scripts/enable-git-hooks.mjs",
+    "scripts/hook-core-mode.mjs",
+    "scripts/llm-autosetup.mjs",
+    "scripts/llm-hard-gate.mjs",
+    "scripts/release-gate.mjs",
+    "scripts/system-proof.mjs",
+    "scripts/security-lockdown.mjs",
+    "scripts/security-unlock.mjs"
+  ],
+  "criticalDirs": [
+    "kernel",
+    "scripts",
+    ".githooks"
+  ],
+  "immutableApplied": []
+}
